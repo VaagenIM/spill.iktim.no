@@ -1,0 +1,23 @@
+{
+  "name": "spill.iktim.no",
+  "version": "1.0.0",
+  "description": "Kildekode for spill.iktim.no",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "export NODE_ENV=dev|| set NODE_ENV=dev&& start http://localhost & nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-favicon": "^2.0.1",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "easy-livereload": "^1.4.3",
+    "node-dev": "^7.4.3",
+    "nodemon": "^2.0.15"
+  }
+}

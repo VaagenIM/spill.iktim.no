@@ -1,0 +1,22 @@
+{
+  "mac_dl": "/games/mac/#",
+  "win_dl": "/games/win/#",
+  "linux_dl": "/games/linux/#",
+  "android_dl": "/games/android/#",
+  "cover": "/games/covers/template.png",
+  "gallery": ["/games/gallery/template/#"],
+  "title": "Template",
+  "description": "JSON template for spill - alle parametre",
+  "category": ["Template", "2nd Entry"],
+  "developer": "Template'r'Us",
+  "developer_link": "https://example.com",
+  "links": [
+    "https://store.steampowered.com/app/",
+    "https://www.humblebundle.com/store/",
+    "https://www.gog.com/en/game/",
+    "https://apps.apple.com/us/app/",
+    "https://play.google.com/store/apps/details?id=",
+    "https://www.nintendo.com/store/products/",
+    "https://itch.io/"
+  ]
+}

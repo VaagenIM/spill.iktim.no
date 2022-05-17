@@ -1,0 +1,14 @@
+extends templates/layout.pug
+  
+block content
+  h1.pagetitle Get your game on
+  p Vi er så heldige å ha flotte spillutviklere som lar oss spille gratis videospill i skolen.
+  #game-grid
+    each game, link in gameList
+      a#game-grid-card(href=link)
+        img.game-card-cover(src=game['cover'])
+        h1.game-title=game['title']
+        if game['category']
+          #game-card-categories
+            each category in game['category']
+              .game-card-category=category

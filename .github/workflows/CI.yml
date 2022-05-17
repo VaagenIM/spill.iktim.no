@@ -5,64 +5,85 @@ name: CI
 # separate terms of service, privacy policy, and support
 # documentation.
 
+env:
+  docker-container: vaagenim/spill.iktim.no
+  platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+
 on:
   push:
-    branches: [ main ]
-    # Publish semver tags as releases.
-    tags: [ 'latest' ]
-
-env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
-
+    branches: [main]
+    tags: [v*]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
-      id-token: write
-
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Prepare
+        id: prepare
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/main ]]; then
+            echo ::set-output name=tag::latest
+          else
+            echo ::set-output name=tag::${GITHUB_REF#refs/heads/}
+          fi
+          if [[ $GITHUB_REF == refs/tags/*-beta ]]; then
+            echo ::set-output name=branch::beta
+          elif [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo ::set-output name=branch::main
+          else
+            echo ::set-output name=branch::${GITHUB_REF#refs/heads/}
+          fi
+          echo ::set-output name=commit::${GITHUB_SHA}
+          echo ::set-output name=build_date::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo ::set-output name=docker_platforms::${{ env.platforms }}
+          echo ::set-output name=docker_image::${{ env.docker-container }}
+      - name: Set Up QEMU
+        uses: docker/setup-qemu-action@v1
 
-      # Workaround: https://github.com/docker/build-push-action/issues/461
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@79abd3f86f79a9d68a23c75a09a9a85889262adf
-
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
-      - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        id: buildx
         with:
-          registry: ${{ env.REGISTRY }}
+          version: latest
+
+      - name: Cache Docker Layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Log into registry GHCR
+        if: success()
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
+      - name: Docker Build and Push
+        uses: docker/build-push-action@v2
+        if: success()
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          file: ./Dockerfile
+          push: true
+          platforms: ${{ steps.prepare.outputs.docker_platforms }}
+          build-args: |
+            TAG=${{ steps.prepare.outputs.tag }}
+            BRANCH=${{ steps.prepare.outputs.branch }}
+            COMMIT=${{ steps.prepare.outputs.commit }}
+            BUILD_DATE=${{ steps.prepare.outputs.build_date }}
+          tags: |
+            ghcr.io/${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.tag }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache

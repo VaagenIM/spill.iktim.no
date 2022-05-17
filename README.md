@@ -6,7 +6,7 @@ Kjøres via `docker-compose.yml`:
 version: "3.3"
 services:
   spill.iktim.no:
-    image: ghcr.io/vaagenim/spill.iktim.no:main
+    image: ghcr.io/vaagenim/spill.iktim.no
     restart: unless-stopped
     ports:
       - "80:80"
@@ -25,3 +25,5 @@ OBS. Ingen spill skal lastes inn på GitHub! De vil være hos et eget CDN (Conte
 ## Oppsett
 Krever et FQDN (Fully Qualified Domain Name), valgfrie `.env` variabler via `docker build`:
 `BASE_URL=iktim.no`
+
+CSS lastes inn via https://iktim.no

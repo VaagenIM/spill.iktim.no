@@ -25,6 +25,8 @@ block content
         if gameData.android_dl
           a.download-button.dl-android(href=gameData.android_dl) 
             | Android <i class="mdi mdi-android"></i>
+        a.download-button.dl-url(href=gameData.url)
+          | Nettleser <i class="mdi mdi-web"></i>
     #game-footer
       p Spillene er lisensiert eller gitt til oss av utviklerne og skal ikke deles med andre enn elever på skolen.
       if gameData['links']

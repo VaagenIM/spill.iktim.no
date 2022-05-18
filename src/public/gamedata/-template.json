@@ -3,6 +3,7 @@
   "win_dl": "/games/win/#",
   "linux_dl": "/games/linux/#",
   "android_dl": "/games/android/#",
+  "url": "#",
   "cover": "/games/covers/template.png",
   "gallery": ["/games/gallery/template/#"],
   "title": "Template",

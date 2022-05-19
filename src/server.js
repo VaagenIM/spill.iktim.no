@@ -39,6 +39,12 @@ const pugData = {
   gameList: {}
 }
 
+app.get('/purge',  (req, res) => {
+  try { delete pugData.gameList } catch { }
+  try { delete pugData.gameData } catch { }
+  res.redirect(`//spill.${baseURL}`)
+}
+
 // Wildcard forespørsel, sender til / ved feil
 app.get('/*', async (req, res) => {
   // Fjern ekstra leading slashes (/)

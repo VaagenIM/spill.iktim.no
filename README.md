@@ -1,4 +1,7 @@
 # spill.iktim.no
+[![Build Status](https://img.shields.io/github/workflow/status/VaagenIM/spill.iktim.no/CI)](https://github.com/VaagenIM/spill.iktim.no/)
+[![GitHub latest commit](https://img.shields.io/github/last-commit/VaagenIM/spill.iktim.no)](https://github.com/VaagenIM/spill.iktim.no/commit/)
+
 Kildekoden til https://spill.iktim.no
 
 Kjøres via `docker-compose.yml`:

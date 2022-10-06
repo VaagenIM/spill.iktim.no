@@ -3,7 +3,7 @@ extends templates/layout.pug
 block content
   h1.pagetitle Get your game on
   p Vi er så heldige å ha flotte spillutviklere som lar oss spille gratis videospill i skolen.
-  p Installasjonsguide: <a href="https://docs.iktim.no/IKT/1-Programvare/Datarom-manualer/Nedlastning-av-spill-PC/">Windows</a>, <a href="https://docs.iktim.no/IKT/1-Programvare/Datarom-manualer/Nedlastning-av-spill-Mac/">MacOS</a>
+  p Installasjonsguide: <a href="https://docs.iktim.no/IKT/1-Programvare/Datarom-manualer/Nedlastning-av-spill-PC/" target="_blank">Windows</a>, <a href="https://docs.iktim.no/IKT/1-Programvare/Datarom-manualer/Nedlastning-av-spill-Mac/" target="_blank">MacOS</a>
   #game-grid
     each game, link in gameList
       a#game-grid-card(href=link)

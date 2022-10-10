@@ -1,12 +1,33 @@
 // Dependencies
 const express = require('express')
+const sqlite3 = require('sqlite3')
 const app = express()
-const fs = require('fs')
 
 // Variabler
-const baseURL = process.env.BASE_URL || 'localhost'
+const baseURL = process.env.BASE_URL || 'iktim.no'
 const port = process.env.PORT || 80
-const gameDataDir = './public/gamedata/'
+
+const db = new sqlite3.Database('./gamedb.db')
+db.serialize(() => {
+  db.run("CREATE TABLE IF NOT EXISTS games (" +
+      "title TEXT," +
+      "description TEXT," +
+      "cover BLOB," +
+      "category1 TEXT," +
+      "category2 TEXT," +
+      "category3 TEXT," +
+      "developer TEXT," +
+      "developer_link TEXT," +
+      "url TEXT," +
+      "win_dl TEXT," +
+      "mac_dl TEXT," +
+      "linux_dl TEXT," +
+      "android_dl TEXT," +
+      "steam TEXT," +
+      "humblebundle TEXT," +
+      "gog TEXT," +
+      "itchio TEXT)")
+});
 
 // Legg til mappen public, brukes til CSS, bilder & favicon
 app.use(express.static('public'))
@@ -40,8 +61,13 @@ const pugData = {
 }
 
 app.get('/purge',  (req, res) => {
-  try { delete pugData.gameList } catch { }
-  try { delete pugData.gameData } catch { }
+  // Purge database entries
+  try {for (const [key, value] of Object.entries(pugData.gameList)) {
+      delete pugData.gameList[key]
+    }} catch{}
+  try {for (const [key, value] of Object.entries(pugData.gameData)) {
+      delete pugData.gameData[key]
+    }} catch{}
   res.redirect(`//spill.${baseURL}`)
 })
 
@@ -55,25 +81,43 @@ app.get('/*', async (req, res) => {
   if (url === '') {
     url = 'index'
 
-    // Last inn liste over spill samt lagre JSON data
-    // TODO: Migrer til et CDN / nocodb database
-    fs.readdir(gameDataDir, async (err, files) => {
-      if (err) {
-        return console.log('Unable to scan directory: ' + err)
-      }
-      await files.forEach(async (file) => {
-        const fn = await file.toLowerCase().replace('.json', '')
-        if (!fn.startsWith('-')) {
-          pugData.gameList[fn] = await require(`${gameDataDir}${file}`)
-        }
+    db.all("SELECT * FROM games", function(err, rows) {
+      rows.forEach(function (row) {
+        // Essential data
+        pugData.gameList[row.title] = {title: row.title}
+        if (row.description)    {pugData.gameList[row.title]["description"]     = row.description}
+        if (row.cover )         {pugData.gameList[row.title]["cover"]           = 'data:image/png;base64,' + row.cover.toString('base64')}
+        if (row.developer)      {pugData.gameList[row.title]["developer"]       = row.developer}
+        if (row.developer_link) {pugData.gameList[row.title]["developer_link"]  = row.developer_link}
+
+        // Download buttons / URLs
+        if (row.url)        {pugData.gameList[row.title]["url"]             = row.url}
+        if (row.win_dl)     {pugData.gameList[row.title]["win_dl"]          = `/games/win/${row.win_dl}`}
+        if (row.mac_dl)     {pugData.gameList[row.title]["mac_dl"]          = `/games/mac/${row.mac_dl}`}
+        if (row.linux_dl)   {pugData.gameList[row.title]["linux_dl"]        = `/games/linux/${row.linux_dl}`}
+        if (row.android_dl) {pugData.gameList[row.title]["android_dl"]      = `/games/android/${row.android_dl}`}
+
+        // Categories
+        pugData.gameList[row.title]["category"] = []
+        if (row.category1) {pugData.gameList[row.title]["category"].push(row.category1)}
+        if (row.category2) {pugData.gameList[row.title]["category"].push(row.category2)}
+        if (row.category3) {pugData.gameList[row.title]["category"].push(row.category3)}
+
+        // Links
+        pugData.gameList[row.title]["links"] = []
+        if (row.steam) {pugData.gameList[row.title]["links"].push(row.steam)}
+        if (row.gog) {pugData.gameList[row.title]["links"].push(row.gog)}
+        if (row.itchio) {pugData.gameList[row.title]["links"].push(row.itchio)}
+        if (row.humblebundle) {pugData.gameList[row.title]["links"].push(row.humblebundle)}
       })
-    })
+    });
   }
 
   // Hvis URL ikke er /, se om det er et spill
   if (url !== 'index') {
     try {
-      pugData.gameData = require(`${gameDataDir}${url}.json`)
+      pugData.gameData = pugData.gameList[url]
+      if (pugData.gameData.title === null) { throw new Error("404") }
       res.render('game', pugData)
       return
     } catch {

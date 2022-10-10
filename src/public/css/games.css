@@ -133,3 +133,10 @@
   margin: 0;
   color: #ddd;
 }
+
+.game-description {
+  opacity: 60%;
+  font-size: .8em;
+  width: 70%;
+  font-style: italic;
+}

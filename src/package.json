@@ -14,7 +14,7 @@
     "express": "^4.17.3",
     "express-favicon": "^2.0.1",
     "pug": "^3.0.2",
-    "sqlite3": "^5.1.2"
+    "sqlite3": "^5.0.2"
   },
   "devDependencies": {
     "easy-livereload": "^1.4.3",

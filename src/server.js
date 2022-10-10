@@ -86,6 +86,7 @@ app.get('/*', async (req, res) => {
       rows.forEach(function (row) {
         // Essential data
         let key = row.title.replaceAll(' ', '-')
+        key = row.title.replaceAll(':', '')
         pugData.gameList[key] = {title: row.title}
         if (row.description)    {pugData.gameList[key]["description"]    = row.description}
         if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}

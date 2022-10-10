@@ -13,6 +13,7 @@ db.serialize(() => {
       "id INTEGER NOT NULL PRIMARY KEY," +
       "title TEXT NOT NULL," +
       "description TEXT," +
+      "note TEXT," +
       "cover BLOB," +
       "category1 TEXT," +
       "category2 TEXT," +
@@ -89,6 +90,7 @@ app.get('/*', async (req, res) => {
         key = key.replaceAll(':', '')
         pugData.gameList[key] = {title: row.title}
         if (row.description)    {pugData.gameList[key]["description"]    = row.description}
+        if (row.note)           {pugData.gameList[key]["note"]           = row.note}
         if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
         if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
         if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}

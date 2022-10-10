@@ -11,6 +11,7 @@ block content
           p.game-developer-info Utviklet av: 
             a(href=gameData['developer_link'] target="_blank")=gameData['developer']
       p.game-description=gameData['description']
+      p.game-note=gameData['note']
     #game-download-area
       #game-download-container
         if gameData.win_dl

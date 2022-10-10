@@ -6,6 +6,7 @@ WORKDIR /app
 
 COPY src/. .
 
+RUN apk add --no-cache python3 make g++
 RUN npm install --production
 
 EXPOSE 80/tcp

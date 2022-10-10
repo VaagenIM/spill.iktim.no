@@ -94,10 +94,10 @@ app.get('/*', async (req, res) => {
 
         // Download buttons / URLs
         if (row.url)        {pugData.gameList[key]["url"]        = row.url}
-        if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/win/${row.win_dl}`}
-        if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/mac/${row.mac_dl}`}
-        if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/linux/${row.linux_dl}`}
-        if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/android/${row.android_dl}`}
+        if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/Win/${row.win_dl}`}
+        if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/Mac/${row.mac_dl}`}
+        if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/Linux/${row.linux_dl}`}
+        if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/Android/${row.android_dl}`}
 
         // Categories
         pugData.gameList[key]["category"] = []

@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY src/. .
 
-RUN apk add --no-cache python3 make g++
+RUN apt-get update && apt-get install -y python build-essential && rm -rf /var/lib/apt/lists/*
 RUN npm install --production
 
 EXPOSE 80/tcp

@@ -87,17 +87,17 @@ app.get('/*', async (req, res) => {
         // Essential data
         let key = row.title.replace(' ', '-')
         pugData.gameList[key] = {title: row.title}
-        if (row.description)    {pugData.gameList[key]["description"]     = row.description}
-        if (row.cover )         {pugData.gameList[key]["cover"]           = 'data:image/png;base64,' + row.cover.toString('base64')}
-        if (row.developer)      {pugData.gameList[key]["developer"]       = row.developer}
-        if (row.developer_link) {pugData.gameList[key]["developer_link"]  = row.developer_link}
+        if (row.description)    {pugData.gameList[key]["description"]    = row.description}
+        if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
+        if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
+        if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
 
         // Download buttons / URLs
-        if (row.url)        {pugData.gameList[key]["url"]             = row.url}
-        if (row.win_dl)     {pugData.gameList[key]["win_dl"]          = `/games/win/${row.win_dl}`}
-        if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]          = `/games/mac/${row.mac_dl}`}
-        if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]        = `/games/linux/${row.linux_dl}`}
-        if (row.android_dl) {pugData.gameList[key]["android_dl"]      = `/games/android/${row.android_dl}`}
+        if (row.url)        {pugData.gameList[key]["url"]        = row.url}
+        if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/win/${row.win_dl}`}
+        if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/mac/${row.mac_dl}`}
+        if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/linux/${row.linux_dl}`}
+        if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/android/${row.android_dl}`}
 
         // Categories
         pugData.gameList[key]["category"] = []

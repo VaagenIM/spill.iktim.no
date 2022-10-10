@@ -64,11 +64,11 @@ const pugData = {
 app.get('/purge',  (req, res) => {
   // Purge database entries
   try {for (const [key, value] of Object.entries(pugData.gameList)) {
-      delete pugData.gameList[key]
-    }} catch{}
+    delete pugData.gameList[key]
+  }} catch{}
   try {for (const [key, value] of Object.entries(pugData.gameData)) {
-      delete pugData.gameData[key]
-    }} catch{}
+    delete pugData.gameData[key]
+  }} catch{}
   res.redirect(`//spill.${baseURL}`)
 })
 
@@ -85,31 +85,32 @@ app.get('/*', async (req, res) => {
     db.all("SELECT * FROM games", function(err, rows) {
       rows.forEach(function (row) {
         // Essential data
-        pugData.gameList[row.title] = {title: row.title}
-        if (row.description)    {pugData.gameList[row.title]["description"]     = row.description}
-        if (row.cover )         {pugData.gameList[row.title]["cover"]           = 'data:image/png;base64,' + row.cover.toString('base64')}
-        if (row.developer)      {pugData.gameList[row.title]["developer"]       = row.developer}
-        if (row.developer_link) {pugData.gameList[row.title]["developer_link"]  = row.developer_link}
+        let key = row.title.replace(' ', '-')
+        pugData.gameList[key] = {title: row.title}
+        if (row.description)    {pugData.gameList[key]["description"]     = row.description}
+        if (row.cover )         {pugData.gameList[key]["cover"]           = 'data:image/png;base64,' + row.cover.toString('base64')}
+        if (row.developer)      {pugData.gameList[key]["developer"]       = row.developer}
+        if (row.developer_link) {pugData.gameList[key]["developer_link"]  = row.developer_link}
 
         // Download buttons / URLs
-        if (row.url)        {pugData.gameList[row.title]["url"]             = row.url}
-        if (row.win_dl)     {pugData.gameList[row.title]["win_dl"]          = `/games/win/${row.win_dl}`}
-        if (row.mac_dl)     {pugData.gameList[row.title]["mac_dl"]          = `/games/mac/${row.mac_dl}`}
-        if (row.linux_dl)   {pugData.gameList[row.title]["linux_dl"]        = `/games/linux/${row.linux_dl}`}
-        if (row.android_dl) {pugData.gameList[row.title]["android_dl"]      = `/games/android/${row.android_dl}`}
+        if (row.url)        {pugData.gameList[key]["url"]             = row.url}
+        if (row.win_dl)     {pugData.gameList[key]["win_dl"]          = `/games/win/${row.win_dl}`}
+        if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]          = `/games/mac/${row.mac_dl}`}
+        if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]        = `/games/linux/${row.linux_dl}`}
+        if (row.android_dl) {pugData.gameList[key]["android_dl"]      = `/games/android/${row.android_dl}`}
 
         // Categories
-        pugData.gameList[row.title]["category"] = []
-        if (row.category1) {pugData.gameList[row.title]["category"].push(row.category1)}
-        if (row.category2) {pugData.gameList[row.title]["category"].push(row.category2)}
-        if (row.category3) {pugData.gameList[row.title]["category"].push(row.category3)}
+        pugData.gameList[key]["category"] = []
+        if (row.category1) {pugData.gameList[key]["category"].push(row.category1)}
+        if (row.category2) {pugData.gameList[key]["category"].push(row.category2)}
+        if (row.category3) {pugData.gameList[key]["category"].push(row.category3)}
 
         // Links
-        pugData.gameList[row.title]["links"] = []
-        if (row.steam) {pugData.gameList[row.title]["links"].push(row.steam)}
-        if (row.gog) {pugData.gameList[row.title]["links"].push(row.gog)}
-        if (row.itchio) {pugData.gameList[row.title]["links"].push(row.itchio)}
-        if (row.humblebundle) {pugData.gameList[row.title]["links"].push(row.humblebundle)}
+        pugData.gameList[key]["links"] = []
+        if (row.steam) {pugData.gameList[key]["links"].push(row.steam)}
+        if (row.gog) {pugData.gameList[key]["links"].push(row.gog)}
+        if (row.itchio) {pugData.gameList[key]["links"].push(row.itchio)}
+        if (row.humblebundle) {pugData.gameList[key]["links"].push(row.humblebundle)}
       })
     });
   }

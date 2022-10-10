@@ -10,7 +10,8 @@ const port = process.env.PORT || 80
 const db = new sqlite3.Database('./gamedb.db')
 db.serialize(() => {
   db.run("CREATE TABLE IF NOT EXISTS games (" +
-      "title TEXT," +
+      "id INTEGER NOT NULL PRIMARY KEY," +
+      "title TEXT NOT NULL," +
       "description TEXT," +
       "cover BLOB," +
       "category1 TEXT," +

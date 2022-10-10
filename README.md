@@ -30,7 +30,7 @@ Foreløpig lenker siden inn hoved-CSS (fargevariabler) fra https://iktim.no.
 ## Bruk
 Legg til rader i `gamedb.db` (generert av koden), last opp bilde til cover i `460x215` (SteamDB) oppløsning.
 
-Spill legges i `/games` mappen. Filer må ligge i undermappene `Win`, `Mac`, `Linux` eller `Android`.
+Spill legges i `/games` mappen. Filer må ligge i undermappene `Windows`, `Mac`, `Linux` eller `Android`.
 
 ## Oppsett
 Krever et FQDN (Fully Qualified Domain Name), valgfrie `.env` variabler via `docker build`:

@@ -1,0 +1,15 @@
+:root {
+  --color-primary: #3a5a84;
+  --color-primary-light: #3a5a84;
+  --color-primary-dark: #00082e;
+  /* Secondaries */
+  --color-secondary: #455a64;
+  --color-secondary-light: #718792;
+  --color-secondary-dark: #293d62;
+  /* Backgrounds */
+  --primary-bg-color: #3b5791;
+  --secondary-bg-color: var(--color-primary-light);
+  --mobile-bg-color: var(--color-secondary-dark);
+  /* Material Design blacks */
+  --md-222: #222;
+}

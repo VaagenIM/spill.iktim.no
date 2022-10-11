@@ -1,0 +1,36 @@
+@media (max-width: 768px) {
+  .hide_mobile {
+    display: none;
+  }
+
+  body {
+    background: var(--mobile-bg-color) !important;
+    overflow-x: hidden !important;
+  }
+
+  #particles-js {
+    display: none;
+  }
+
+  #spacing {
+    padding: 0.8rem 0;
+  }
+
+  #copyright {
+    display: block;
+    margin-bottom: 0.5ch;
+  }
+
+  #grid-center-content {
+    grid-row: 1/4 !important;
+    grid-column: 1/4 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  .navbar * {
+    display: block !important;
+    font-size: 1.8em !important;
+    padding: 0.8em 0;
+  }
+}

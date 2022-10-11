@@ -1,0 +1,23 @@
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  user-select: none;
+  filter: blur(3px);
+  transition: all .4s ease-in-out;
+}
+
+#particles-js:hover {
+  filter: blur(0.6px);
+}
+
+.particleZone {
+  pointer-events: none;
+}
+
+.particleZone * {
+  pointer-events: auto;
+}

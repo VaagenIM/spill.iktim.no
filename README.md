@@ -1,4 +1,7 @@
 # spill.iktim.no
+
+Demo content by me & OpenAI (DallE-2 and Davinci-002 Text model)
+
 [![Build Status](https://img.shields.io/github/workflow/status/VaagenIM/spill.iktim.no/CI)](https://github.com/VaagenIM/spill.iktim.no/)
 [![GitHub latest commit](https://img.shields.io/github/last-commit/VaagenIM/spill.iktim.no)](https://github.com/VaagenIM/spill.iktim.no/commit/)
 

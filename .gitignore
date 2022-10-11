@@ -127,4 +127,3 @@ dist
 .pnp.*
 
 .idea/
-src/gamedb.db

@@ -2,8 +2,8 @@ extends templates/layout.pug
   
 block content
   h1.pagetitle Get your game on
-  p Vi er så heldige å ha flotte spillutviklere som lar oss spille gratis videospill i skolen.
-  p Installasjonsguide: <a href="https://docs.iktim.no/IKT/1-Programvare/Datarom-manualer/Nedlastning-av-spill-PC/" target="_blank">Windows</a>, <a href="https://docs.iktim.no/IKT/1-Programvare/Datarom-manualer/Nedlastning-av-spill-Mac/" target="_blank">MacOS</a>
+  p Velkommen til denne demo-siden for prosjektet. Kildekoden finner du <a href="https://github.com/VaagenIM/spill.iktim.no">her</a>
+  p Installasjonsguide: <a href="#" target="_blank">Windows</a>, <a href="#" target="_blank">MacOS</a>
   #game-grid
     each game, link in gameList
       a#game-grid-card(href=link)

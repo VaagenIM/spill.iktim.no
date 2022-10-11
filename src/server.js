@@ -71,7 +71,7 @@ function update_gameList() {
 
   // Connect and load table 'games'
   let db = new sqlite3.Database('./gamedb.db')
-  db.all("SELECT * FROM games", function(err, rows) {
+  db.all("SELECT * FROM games ORDER BY title ASC", function(err, rows) {
   rows.forEach(function (row) {
     let key = row.title.replaceAll(' ', '-')
     key = key.replaceAll(':', '')

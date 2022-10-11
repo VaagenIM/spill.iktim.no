@@ -44,8 +44,6 @@ I NocoDB (`:8080`):
 - Cover fungerer best med oppløsning `460x215` (SteamDB)
 - `win_dl` skal ha filnavnet som ligger i `Games/Windows/` mappen, `mac_dl` i `Games/Mac/`.
 
-For å tvinge oppdatering av databasen, går du til `/purge` siden, feks. `https://spill.iktim.no/purge`
-
 ## Oppsett
 Krever et FQDN (Fully Qualified Domain Name), valgfrie `.env` variabler via `docker build`:
 `BASE_URL=iktim.no`

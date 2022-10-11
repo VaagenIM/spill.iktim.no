@@ -32,7 +32,7 @@ db.serialize(() => {
 });
 db.close()
 
-// Legg til mappen public, brukes til CSS, bilder & favicon
+// Legg til mappen public, brukes til CSS, spill, bilder & favicon
 app.use(express.static('public'))
 // Bruk .pug til å tegne HTML (https://pugjs.org/)
 app.set('view engine', 'pug')
@@ -64,18 +64,20 @@ const pugData = {
 }
 
 app.get('/purge',  (req, res) => {
-  // Purge database entries
-  try {for (const [key, value] of Object.entries(pugData.gameList)) {
-    delete pugData.gameList[key]
-  }} catch{}
-  try {for (const [key, value] of Object.entries(pugData.gameData)) {
-    delete pugData.gameData[key]
-  }} catch{}
   update_pugData()
   res.redirect(`//spill.${baseURL}`)
 })
 
 function update_pugData() {
+      // Purge database entries
+      try {for (const [key, value] of Object.entries(pugData.gameList)) {
+        delete pugData.gameList[key]
+      }} catch{}
+      try {for (const [key, value] of Object.entries(pugData.gameData)) {
+        delete pugData.gameData[key]
+      }} catch{}
+
+      // Connect and load table 'games'
       let db = new sqlite3.Database('./gamedb.db')
       db.all("SELECT * FROM games", function(err, rows) {
       rows.forEach(function (row) {
@@ -123,22 +125,16 @@ app.get('/*', async (req, res) => {
   // Hvis ingen side er spesifisert, vis hjemmeside
   if (url === '') {
     url = 'index'
-  }
-
-  // Hvis URL ikke er /, se om det er et spill
-  if (url !== 'index') {
-    try {
-      pugData.gameData = pugData.gameList[url]
-      if (pugData.gameData.title === null) { throw new Error("404") }
+  } else {
+    // Hvis spill finnes i database, last inn den
+    pugData.gameData = pugData.gameList[url]
+    if (pugData.gameData !== undefined) {
       res.render('game', pugData)
-      return
-    } catch {
-      res.redirect(`//spill.${baseURL}`)
       return
     }
   }
 
-  // Forsøk å laste inn, ved feil, send tilbake til index
+  // Forsøk å laste inn url (ikke spill), ved feil, send tilbake til index
   await res.render(url, pugData, (err, html) => {
     if (!err) {
       res.send(html)

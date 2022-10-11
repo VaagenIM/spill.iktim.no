@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'dev') {
   console.log('WARNING: Dev mode initialized.')
   const path = require('path')
   const watchFolders = ['views', 'views/templates', 'public', 'public/css']
-  var paths = []
+  let paths = []
   watchFolders.forEach(folder => {
     paths = paths.concat([path.join(__dirname, folder)])
   })
@@ -63,64 +63,56 @@ const pugData = {
   gameList: {}
 }
 
-app.get('/purge',  (req, res) => {
-  update_pugData()
-  res.redirect(`//spill.${baseURL}`)
-})
+// Hent data fra database
+function update_gameList() {
+  // Purge database entries
+  try {for (const [key, _] of Object.entries(pugData.gameList)) { delete pugData.gameList[key] }} catch{}
+  try {for (const [key, _] of Object.entries(pugData.gameData)) { delete pugData.gameData[key] }} catch{}
 
-function update_pugData() {
-      // Purge database entries
-      try {for (const [key, value] of Object.entries(pugData.gameList)) {
-        delete pugData.gameList[key]
-      }} catch{}
-      try {for (const [key, value] of Object.entries(pugData.gameData)) {
-        delete pugData.gameData[key]
-      }} catch{}
+  // Connect and load table 'games'
+  let db = new sqlite3.Database('./gamedb.db')
+  db.all("SELECT * FROM games", function(err, rows) {
+  rows.forEach(function (row) {
+    let key = row.title.replaceAll(' ', '-')
+    key = key.replaceAll(':', '')
 
-      // Connect and load table 'games'
-      let db = new sqlite3.Database('./gamedb.db')
-      db.all("SELECT * FROM games", function(err, rows) {
-      rows.forEach(function (row) {
-        let key = row.title.replaceAll(' ', '-')
-        key = key.replaceAll(':', '')
+    // Essential data
+    pugData.gameList[key] = {title: row.title}
+    if (row.description)    {pugData.gameList[key]["description"]    = row.description}
+    if (row.note)           {pugData.gameList[key]["note"]           = row.note}
+    if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
+    if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
+    if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
 
-        // Essential data
-        pugData.gameList[key] = {title: row.title}
-        if (row.description)    {pugData.gameList[key]["description"]    = row.description}
-        if (row.note)           {pugData.gameList[key]["note"]           = row.note}
-        if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
-        if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
-        if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
+    // Download buttons / URLs
+    if (row.url)        {pugData.gameList[key]["url"]        = row.url}
+    if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/Windows/${row.win_dl}`}
+    if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/Mac/${row.mac_dl}`}
+    if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/Linux/${row.linux_dl}`}
+    if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/Android/${row.android_dl}`}
 
-        // Download buttons / URLs
-        if (row.url)        {pugData.gameList[key]["url"]        = row.url}
-        if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/Windows/${row.win_dl}`}
-        if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/Mac/${row.mac_dl}`}
-        if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/Linux/${row.linux_dl}`}
-        if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/Android/${row.android_dl}`}
+    // Categories
+    pugData.gameList[key]["category"] = []
+    if (row.category1) {pugData.gameList[key]["category"].push(row.category1)}
+    if (row.category2) {pugData.gameList[key]["category"].push(row.category2)}
+    if (row.category3) {pugData.gameList[key]["category"].push(row.category3)}
 
-        // Categories
-        pugData.gameList[key]["category"] = []
-        if (row.category1) {pugData.gameList[key]["category"].push(row.category1)}
-        if (row.category2) {pugData.gameList[key]["category"].push(row.category2)}
-        if (row.category3) {pugData.gameList[key]["category"].push(row.category3)}
-
-        // Links
-        pugData.gameList[key]["links"] = []
-        if (row.steam) {pugData.gameList[key]["links"].push(row.steam)}
-        if (row.gog) {pugData.gameList[key]["links"].push(row.gog)}
-        if (row.itchio) {pugData.gameList[key]["links"].push(row.itchio)}
-        if (row.humblebundle) {pugData.gameList[key]["links"].push(row.humblebundle)}
-        })
-      });
-      db.close()
+    // Links
+    pugData.gameList[key]["links"] = []
+    if (row.steam) {pugData.gameList[key]["links"].push(row.steam)}
+    if (row.gog) {pugData.gameList[key]["links"].push(row.gog)}
+    if (row.itchio) {pugData.gameList[key]["links"].push(row.itchio)}
+    if (row.humblebundle) {pugData.gameList[key]["links"].push(row.humblebundle)}
+    })
+  });
+  db.close()
 }
 
 // Wildcard forespørsel, sender til / ved feil
 app.get('/*', async (req, res) => {
   // Fjern ekstra leading slashes (/)
   // Regex: ^\/+ - se regexr.com for detaljer
-  var url = req.url.replace(/^\/+/, '')
+  let url = req.url.replace(/^\/+/, '')
 
   // Hvis ingen side er spesifisert, vis hjemmeside
   if (url === '') {
@@ -128,24 +120,24 @@ app.get('/*', async (req, res) => {
   } else {
     // Hvis spill finnes i database, last inn den
     pugData.gameData = pugData.gameList[url]
-    if (pugData.gameData !== undefined) {
-      res.render('game', pugData)
-      return
-    }
+    if (pugData.gameData !== undefined) {url = 'game'}  // url = game.pug
   }
 
-  // Forsøk å laste inn url (ikke spill), ved feil, send tilbake til index
-  await res.render(url, pugData, (err, html) => {
-    if (!err) {
-      res.send(html)
-    } else {
-      res.redirect(`//spill.${baseURL}`)
-    }
-  })
+  try {
+    res.render(url, pugData, (err, html) => {
+      if (err) { throw err }
+      else { res.send(html) }
+    })
+  } catch {
+    res.redirect(`//spill.${baseURL}`)
+  }
+
+  // Reload db
+  update_gameList()
 })
 
 // Start app
 app.listen(port, () => {
-  update_pugData()
+  update_gameList()
   console.log(`Listening on port ${port}`)
 })

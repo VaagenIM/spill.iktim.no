@@ -16,6 +16,14 @@ services:
     volumes:
       - ./games:/app/public/games
       - ./gamedb.db:/app/gamedb.db
+  spilldb.iktim.no:
+    image: nocodb/nocodb
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./gamedb.db:/usr/src/app/noco.db
+      - ./uploads:/usr/app/data/nc/uploads
 ```
 
 ## Utvikling
@@ -28,12 +36,20 @@ OBS. Ingen spill skal lastes inn på GitHub! De vil være hos et eget CDN (Conte
 Foreløpig lenker siden inn hoved-CSS (fargevariabler) fra https://iktim.no.
 
 ## Bruk
-Legg til rader i `gamedb.db` (generert av koden), last opp bilde til cover i `460x215` (SteamDB) oppløsning.
+Prosjektet bruker SQLITE3 som database back-end.
 
-Spill legges i `/games` mappen. Filer må ligge i undermappene `Windows`, `Mac`, `Linux` eller `Android`.
+I NocoDB (`:8080`):
+- Koble til en database, velg databasetype `SQLITE`. Database-sti er `noco.db`
+- I databasen `Games` endrer du `Cover` kolonnetypen til `Attachments`
+- Cover fungerer best med oppløsning `460x215` (SteamDB)
+- `win_dl` skal ha filnavnet som ligger i `Games/Windows/` mappen, `mac_dl` i `Games/Mac/`.
+
+For å tvinge oppdatering av databasen, går du til `/purge` siden, feks. `https://spill.iktim.no/purge`
 
 ## Oppsett
 Krever et FQDN (Fully Qualified Domain Name), valgfrie `.env` variabler via `docker build`:
 `BASE_URL=iktim.no`
+
+FQDN kan settes opp via https://nginxproxymanager.com/
 
 CSS lastes inn via https://iktim.no

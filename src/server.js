@@ -30,6 +30,7 @@ db.serialize(() => {
       "gog TEXT," +
       "itchio TEXT)")
 });
+db.close()
 
 // Legg til mappen public, brukes til CSS, bilder & favicon
 app.use(express.static('public'))
@@ -70,24 +71,18 @@ app.get('/purge',  (req, res) => {
   try {for (const [key, value] of Object.entries(pugData.gameData)) {
     delete pugData.gameData[key]
   }} catch{}
+  update_pugData()
   res.redirect(`//spill.${baseURL}`)
 })
 
-// Wildcard forespørsel, sender til / ved feil
-app.get('/*', async (req, res) => {
-  // Fjern ekstra leading slashes (/)
-  // Regex: ^\/+ - se regexr.com for detaljer
-  var url = req.url.replace(/^\/+/, '')
-
-  // Hvis ingen side er spesifisert, vis hjemmeside
-  if (url === '') {
-    url = 'index'
-
-    db.all("SELECT * FROM games", function(err, rows) {
+function update_pugData() {
+      let db = new sqlite3.Database('./gamedb.db')
+      db.all("SELECT * FROM games", function(err, rows) {
       rows.forEach(function (row) {
-        // Essential data
         let key = row.title.replaceAll(' ', '-')
         key = key.replaceAll(':', '')
+
+        // Essential data
         pugData.gameList[key] = {title: row.title}
         if (row.description)    {pugData.gameList[key]["description"]    = row.description}
         if (row.note)           {pugData.gameList[key]["note"]           = row.note}
@@ -114,8 +109,20 @@ app.get('/*', async (req, res) => {
         if (row.gog) {pugData.gameList[key]["links"].push(row.gog)}
         if (row.itchio) {pugData.gameList[key]["links"].push(row.itchio)}
         if (row.humblebundle) {pugData.gameList[key]["links"].push(row.humblebundle)}
-      })
-    });
+        })
+      });
+      db.close()
+}
+
+// Wildcard forespørsel, sender til / ved feil
+app.get('/*', async (req, res) => {
+  // Fjern ekstra leading slashes (/)
+  // Regex: ^\/+ - se regexr.com for detaljer
+  var url = req.url.replace(/^\/+/, '')
+
+  // Hvis ingen side er spesifisert, vis hjemmeside
+  if (url === '') {
+    url = 'index'
   }
 
   // Hvis URL ikke er /, se om det er et spill
@@ -143,5 +150,6 @@ app.get('/*', async (req, res) => {
 
 // Start app
 app.listen(port, () => {
+  update_pugData()
   console.log(`Listening on port ${port}`)
 })

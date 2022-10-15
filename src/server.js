@@ -71,40 +71,40 @@ function update_gameList() {
 
   // Connect and load table 'games'
   let db = new sqlite3.Database('./gamedb.db')
-  db.all("SELECT * FROM games ORDER BY title ASC", function(err, rows) {
-  rows.forEach(function (row) {
-    let key = row.title.replaceAll(' ', '-')
-    key = key.replaceAll(':', '')
+  db.all("SELECT * FROM games ORDER BY (CASE WHEN title LIKE 'The %' THEN substring(title, 5, 1000) ELSE title END)", function(err, rows) {
+    rows.forEach(function (row) {
+      let key = row.title.replaceAll(' ', '-')
+      key = key.replaceAll(':', '')
 
-    // Essential data
-    pugData.gameList[key] = {title: row.title}
-    if (row.description)    {pugData.gameList[key]["description"]    = row.description}
-    if (row.note)           {pugData.gameList[key]["note"]           = row.note}
-    if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
-    if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
-    if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
+      // Essential data
+      pugData.gameList[key] = {title: row.title}
+      if (row.description)    {pugData.gameList[key]["description"]    = row.description}
+      if (row.note)           {pugData.gameList[key]["note"]           = row.note}
+      if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
+      if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
+      if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
 
-    // Download buttons / URLs
-    if (row.url)        {pugData.gameList[key]["url"]        = row.url}
-    if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/Windows/${row.win_dl}`}
-    if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/Mac/${row.mac_dl}`}
-    if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/Linux/${row.linux_dl}`}
-    if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/Android/${row.android_dl}`}
+      // Download buttons / URLs
+      if (row.url)        {pugData.gameList[key]["url"]        = row.url}
+      if (row.win_dl)     {pugData.gameList[key]["win_dl"]     = `/games/Windows/${row.win_dl}`}
+      if (row.mac_dl)     {pugData.gameList[key]["mac_dl"]     = `/games/Mac/${row.mac_dl}`}
+      if (row.linux_dl)   {pugData.gameList[key]["linux_dl"]   = `/games/Linux/${row.linux_dl}`}
+      if (row.android_dl) {pugData.gameList[key]["android_dl"] = `/games/Android/${row.android_dl}`}
 
-    // Categories
-    pugData.gameList[key]["category"] = []
-    if (row.category1) {pugData.gameList[key]["category"].push(row.category1)}
-    if (row.category2) {pugData.gameList[key]["category"].push(row.category2)}
-    if (row.category3) {pugData.gameList[key]["category"].push(row.category3)}
+      // Categories
+      pugData.gameList[key]["category"] = []
+      if (row.category1) {pugData.gameList[key]["category"].push(row.category1)}
+      if (row.category2) {pugData.gameList[key]["category"].push(row.category2)}
+      if (row.category3) {pugData.gameList[key]["category"].push(row.category3)}
 
-    // Links
-    pugData.gameList[key]["links"] = []
-    if (row.steam) {pugData.gameList[key]["links"].push(row.steam)}
-    if (row.gog) {pugData.gameList[key]["links"].push(row.gog)}
-    if (row.itchio) {pugData.gameList[key]["links"].push(row.itchio)}
-    if (row.humblebundle) {pugData.gameList[key]["links"].push(row.humblebundle)}
-    })
-  });
+      // Links
+      pugData.gameList[key]["links"] = []
+      if (row.steam) {pugData.gameList[key]["links"].push(row.steam)}
+      if (row.gog) {pugData.gameList[key]["links"].push(row.gog)}
+      if (row.itchio) {pugData.gameList[key]["links"].push(row.itchio)}
+      if (row.humblebundle) {pugData.gameList[key]["links"].push(row.humblebundle)}
+      })
+    });
   db.close()
 }
 

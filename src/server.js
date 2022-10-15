@@ -15,6 +15,7 @@ db.serialize(() => {
       "description TEXT," +
       "note TEXT," +
       "cover BLOB," +
+      "time_to_beat TEXT," +
       "category1 TEXT," +
       "category2 TEXT," +
       "category3 TEXT," +
@@ -81,6 +82,7 @@ function update_gameList() {
       if (row.description)    {pugData.gameList[key]["description"]    = row.description}
       if (row.note)           {pugData.gameList[key]["note"]           = row.note}
       if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
+      if (row.time_to_beat)   {pugData.gameList[key]["ttb"]            = row.time_to_beat}
       if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
       if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
 

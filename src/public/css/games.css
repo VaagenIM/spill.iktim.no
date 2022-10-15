@@ -9,16 +9,7 @@
   -webkit-box-orient: vertical;
 }
 
-.game-cover, .game-card-cover {
-  border-radius: 20px;
-  box-shadow: 3px 3px 4px rgba(0, 0, 0, .2);
-  transition: all .2s ease-in-out;
-}
-
-.game-cover:hover, .game-card-cover:hover {
-  transform: scale(1.01);
-  box-shadow: 3px 3px 6px rgba(0, 0, 0, .4);
-}
+*{transition: all .2s ease-in-out;}
 
 #game-container {
   max-width: 70vw;
@@ -42,7 +33,6 @@
   background-color: rgba(0, 0, 0, .2);
   border-radius: 10px;
   padding: 1.5em;
-  transition: all .2s ease-in-out;
   text-decoration: none;
   display: grid;
 }
@@ -52,10 +42,55 @@
   filter: drop-shadow(3px 3px 10px rgba(0, 0, 0, .5)) brightness(1.1);
 }
 
-.game-card-cover {
+/* Game Cover */
+.game-card-cover img {
   width: 100%;
-  height: auto;
 }
+
+.game-cover,
+.game-card-cover img{
+  border-radius: 20px;
+  box-shadow: 3px 3px 4px rgba(0, 0, 0, .2);
+}
+
+.game-cover:hover,
+.game-card-cover img:hover,
+.game-card-cover img:hover + .game-card-cover-info{
+  transform: scale(1.01);
+  transform-origin:bottom center;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, .4);
+}
+/* End Game Cover */
+
+/* Game Card Cover Info */
+.game-card-cover-info{
+  position: relative;
+  margin-top: calc(-1.4em - 4px);
+  border-radius: 0 0 20px 20px;
+  background-color: rgba(0,20,30,.55);
+  display: flex;
+  opacity: 65%;
+}
+
+#game-grid-card:hover .game-card-cover-info,
+#game-grid-card:hover .ttb{
+  opacity: 100%;
+}
+
+.platforms, .ttb{
+  padding: 2px 1.3ch;
+  filter: drop-shadow(1px 1px .3px rgba(0, 0, 0, 1));
+}
+
+.ttb{
+  margin-left: auto;
+  margin-top: .8px;
+  font-family: sans-serif;
+  font-weight: bold;
+  opacity: 70%;
+}
+
+/* End Game Card Cover Info */
 
 .game-link i {
   padding-inline: .2ch;

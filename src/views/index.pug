@@ -6,8 +6,23 @@ block content
   p Installasjonsguide: <a href="#" target="_blank">Windows</a>, <a href="#" target="_blank">MacOS</a>
   #game-grid
     each game, link in gameList
-      a#game-grid-card(href=link)
-        img.game-card-cover(src=game['cover'])
+      a#game-grid-card(href=link+'.html')
+        .game-card-cover
+            img(src=game['cover'])
+            .game-card-cover-info
+                .platforms
+                    if game.win_dl
+                        <i class="mdi mdi-microsoft-windows"></i>
+                    if game.mac_dl
+                        <i class="mdi mdi-apple"></i>
+                    if game.linux_dl
+                        <i class="mdi mdi-linux"></i>
+                    if game.android_dl
+                        <i class="mdi mdi-android"></i>
+                    if game.url
+                        <i class="mdi mdi-web"></i>
+                if game.ttb
+                    .ttb=game.ttb
         h1.game-title=game['title']
         if game['category']
           #game-card-categories

@@ -12,12 +12,13 @@ block content
             a(href=gameData['developer_link'] target="_blank")=gameData['developer']
       p.game-description=gameData['description']
       p.game-note!=gameData['note']
-      if (gameData['ttb'])
-          p.game-ttb Tid:
-            span.tid=gameData['ttb']
       if (gameData['players'])
-          p.game-players Antall spillere:
-            span.spillere=gameData['players']
+          p.game-players <i class="players-icon mdi mdi-account"></i><span> </span>
+            span=gameData['players']
+            span  player
+      if (gameData['ttb'])
+          p.game-ttb <i class="ttb-icon mdi mdi-clock-outline"></i><span> </span>
+            span=gameData['ttb']
     #game-download-area
       #game-download-container
         if gameData.win_dl

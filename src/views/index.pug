@@ -10,7 +10,12 @@ block content
         .game-card-cover
             img(src=game['cover'])
             .game-card-cover-info
+                if game.players
+                    .players
+                        <i class="mdi mdi-account"></i><span class="playercount">#{game.players}</span>
                 .platforms
+                    if game.url
+                        <i class="mdi mdi-web"></i>
                     if game.win_dl
                         <i class="mdi mdi-microsoft-windows"></i>
                     if game.mac_dl
@@ -19,8 +24,6 @@ block content
                         <i class="mdi mdi-linux"></i>
                     if game.android_dl
                         <i class="mdi mdi-android"></i>
-                    if game.url
-                        <i class="mdi mdi-web"></i>
                 if game.ttb
                     .ttb=game.ttb
         h1.game-title=game['title']

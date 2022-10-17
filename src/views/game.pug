@@ -1,17 +1,23 @@
 extends templates/layout.pug
 block variables
   -var title = gameData['title']
-    
+
 block content
   #game-container
     img.game-cover(src=gameData['cover'])
     #game-info
       h1.game-title=gameData['title']
       if (gameData['developer'])
-          p.game-developer-info Utviklet av: 
+          p.game-developer-info Utviklet av:
             a(href=gameData['developer_link'] target="_blank")=gameData['developer']
       p.game-description=gameData['description']
-      p.game-note=gameData['note']
+      p.game-note!=gameData['note']
+      if (gameData['ttb'])
+          p.game-ttb Tid:
+            span.tid=gameData['ttb']
+      if (gameData['players'])
+          p.game-players Antall spillere:
+            span.spillere=gameData['players']
     #game-download-area
       #game-download-container
         if gameData.win_dl

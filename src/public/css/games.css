@@ -70,6 +70,7 @@
   background-color: rgba(0,20,30,.55);
   display: flex;
   opacity: 65%;
+  padding-inline: 1.2ch;
 }
 
 #game-grid-card:hover .game-card-cover-info,
@@ -77,9 +78,19 @@
   opacity: 100%;
 }
 
-.platforms, .ttb{
-  padding: 2px 1.3ch;
+.platforms, .ttb, .players{
+  padding: 2px;
   filter: drop-shadow(1px 1px .3px rgba(0, 0, 0, 1));
+}
+
+.players{
+  margin-left: -.2ch;
+}
+
+.playercount{
+  padding-inline: .5px;
+  position: relative;
+  bottom: .9px;
 }
 
 .ttb{

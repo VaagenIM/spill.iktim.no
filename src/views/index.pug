@@ -12,7 +12,10 @@ block content
             .game-card-cover-info
                 if game.players
                     .players
-                        <i class="mdi mdi-account"></i><span class="playercount">#{game.players}</span>
+                        if game.players == 1
+                            <i class="mdi mdi-account"></i><span class="playercount">#{game.players}</span>
+                        else
+                            <i class="mdi mdi-account-group" style="padding-right: 2px;"></i><span class="playercount">#{game.players}</span>
                 .platforms
                     if game.url
                         <i class="mdi mdi-web"></i>

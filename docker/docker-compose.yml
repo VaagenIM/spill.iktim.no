@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  spill.iktim.no:
+    image: ghcr.io/vaagenim/spill.iktim.no
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./games:/app/public/games
+      - ./gamedb.db:/app/gamedb.db
+  spilldb.iktim.no:
+    image: nocodb/nocodb
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./gamedb.db:/usr/src/app/noco.db
+      - ./uploads:/usr/app/data/nc/uploads

@@ -13,10 +13,10 @@ db.serialize(() => {
       "id INTEGER NOT NULL PRIMARY KEY," +
       "title TEXT NOT NULL," +
       "description TEXT," +
-      "note TEXT," +
+      "Note TEXT," +
       "cover BLOB," +
-      "time_to_beat TEXT," +
-      "players TEXT," +
+      "Time TEXT," +
+      "Players TEXT," +
       "category1 TEXT," +
       "category2 TEXT," +
       "category3 TEXT," +
@@ -74,6 +74,7 @@ function update_gameList() {
   // Connect and load table 'games'
   let db = new sqlite3.Database('./gamedb.db')
   db.all("SELECT * FROM games ORDER BY (CASE WHEN title LIKE 'The %' THEN substring(title, 5, 1000) ELSE title END)", function(err, rows) {
+    if (err) { console.log('No games found'); return; }
     rows.forEach(function (row) {
       let key = row.title.replaceAll(' ', '-')
       key = key.replaceAll(':', '')
@@ -81,10 +82,10 @@ function update_gameList() {
       // Essential data
       pugData.gameList[key] = {title: row.title}
       if (row.description)    {pugData.gameList[key]["description"]    = row.description}
-      if (row.note)           {pugData.gameList[key]["note"]           = row.note}
-      if (row.cover)          {pugData.gameList[key]["cover"]          = JSON.parse(row.cover)[0].url}
-      if (row.time_to_beat)   {pugData.gameList[key]["ttb"]            = row.time_to_beat}
-      if (row.players)        {pugData.gameList[key]["players"]        = row.players}
+      if (row.Note)           {pugData.gameList[key]["note"]           = row.Note}
+      if (row.cover)          {pugData.gameList[key]["cover"]          = 'img/' + JSON.parse(row.cover)[0].url.split('/Games/Cover/')[1]}
+      if (row.Time)           {pugData.gameList[key]["ttb"]            = row.Time}
+      if (row.Players)        {pugData.gameList[key]["players"]        = row.Players}
       if (row.developer)      {pugData.gameList[key]["developer"]      = row.developer}
       if (row.developer_link) {pugData.gameList[key]["developer_link"] = row.developer_link}
 
